@@ -31,7 +31,7 @@ My bitcoin address is [1BXiogdLRwoKsLjTmoaTYZB5Zn8ZoWCwMP](bitcoin:1BXiogdLRwoKs
 
 # Questions
 
-Create an issue!
+[Create an issue!](https://github.com/bxio/dummyAlexa/issues/new)
 
 
 [echo link]: http://www.amazon.com/dp/B00X4WHP5E/?tag=bxio-20

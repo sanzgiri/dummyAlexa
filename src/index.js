@@ -48,7 +48,6 @@ DummySkill.prototype.eventHandlers.onLaunch = function (launchRequest, session, 
     console.log("DummySkill onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
     //set session attributes
     session.attributes = {NumQuestionsAsked:0, NumQuestionsWanted:0, QuestionStarted: false,QuestionBank: []};
-    handleTellMeAJokeIntent(session, response);
 };
 
 /**
@@ -75,34 +74,16 @@ DummySkill.prototype.intentHandlers = {
         handleGetDelayIntent(intent, session, response);
     },
 
-
-
     HelpIntent: function (intent, session, response) {
         var speechOutput = "";
 
-        switch (session.attributes.stage) {
-            case 0:
-                speechOutput = "Knock knock jokes are a fun call and response type of joke. " +
-                    "To start the joke, just ask by saying tell me a joke, or you can say exit.";
-                break;
-            case 1:
-                speechOutput = "You can ask, who's there, or you can say exit.";
-                break;
-            case 2:
-                speechOutput = "You can ask, who, or you can say exit.";
-                break;
-            default:
-                speechOutput = "Knock knock jokes are a fun call and response type of joke. " +
-                    "To start the joke, just ask by saying tell me a joke, or you can say exit.";
-        }
+        speechOutput = "Please consult the README document for usage and things to try. ";
 
         // For the repromptText, play the speechOutput again
         response.ask({speech: speechOutput, type: AlexaSkill.speechOutput.PLAIN_TEXT},
                 {speech: speechOutput, type: AlexaSkill.speechOutput.PLAIN_TEXT});
     }
 }
-
-
 
 function handleStartQuestionIntent(intent, session, response){
   // notImplementedYet(intent, session, response);
