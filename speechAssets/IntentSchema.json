@@ -1,0 +1,43 @@
+{
+  "intents": [
+    {
+      "intent": "StartQuestionIntent",
+      "slots": [
+        {
+          "name": "NumToAsk",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "GetDelayIntent",
+      "slots": []
+    },
+    {
+      "intent": "RevealAnswerIntent",
+      "slots": []
+    },
+    {
+      "intent": "NextQuestionIntent",
+      "slots": []
+    },
+
+    {
+      "intent": "StartRoundIntent",
+      "slots": [
+        {
+          "name": "NumPlayers",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "HelpIntent",
+      "slots": []
+    },
+    {
+      "intent": "ReplaceQuestionIntent",
+      "slots": []
+    }
+  ]
+}

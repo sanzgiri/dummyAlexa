@@ -1,0 +1,75 @@
+StartRoundIntent let's play a full game
+StartRoundIntent let's play a full round
+StartRoundIntent let's start a full game
+StartRoundIntent let's start a full round
+StartRoundIntent let's play a full game with {NumPlayers} players
+StartRoundIntent let's play a full round with {NumPlayers} players
+StartRoundIntent let's start a full game with {NumPlayers} players
+StartRoundIntent let's start a full round with {NumPlayers} players
+StartRoundIntent let's play a full game with {NumPlayers} people
+StartRoundIntent let's play a full round with {NumPlayers} people
+StartRoundIntent let's start a full game with {NumPlayers} people
+StartRoundIntent let's start a full round with {NumPlayers} people
+
+StartQuestionIntent ask me {NumToAsk} question
+StartQuestionIntent ask me {NumToAsk} questions
+StartQuestionIntent ask me {NumToAsk} random question
+StartQuestionIntent ask me {NumToAsk} random questions
+StartQuestionIntent ask me {NumToAsk} random
+StartQuestionIntent ask me {NumToAsk} randoms
+StartQuestionIntent ask {NumToAsk} question
+StartQuestionIntent ask {NumToAsk} questions
+StartQuestionIntent ask {NumToAsk} random question
+StartQuestionIntent ask {NumToAsk} random questions
+StartQuestionIntent ask {NumToAsk} random
+StartQuestionIntent ask {NumToAsk} randoms
+StartQuestionIntent for {NumToAsk} question
+StartQuestionIntent for {NumToAsk} questions
+StartQuestionIntent for {NumToAsk} random question
+StartQuestionIntent for {NumToAsk} random questions
+StartQuestionIntent for {NumToAsk} random
+StartQuestionIntent for {NumToAsk} randoms
+StartQuestionIntent random question
+StartQuestionIntent random
+StartQuestionIntent ask me a question
+StartQuestionIntent ask me another question
+StartQuestionIntent ask me a random question
+StartQuestionIntent ask me another random question
+StartQuestionIntent ask me another random
+
+RevealAnswerIntent what's the answer
+RevealAnswerIntent what is the answer
+RevealAnswerIntent give me the answer
+RevealAnswerIntent let's have the answer
+RevealAnswerIntent I give up
+
+ReplaceQuestionIntent can I have a different question
+ReplaceQuestionIntent can you ask me a different question
+ReplaceQuestionIntent can you replace this question
+ReplaceQuestionIntent can you replace this question for me
+
+GetDelayIntent can you tell me what is the delay
+GetDelayIntent can you tell me the delay
+GetDelayIntent what is the delay
+GetDelayIntent what is the wait time
+GetDelayIntent what is my delay
+GetDelayIntent what is my wait time
+GetDelayIntent what's the delay
+GetDelayIntent what's the wait time
+GetDelayIntent what's my delay
+GetDelayIntent what's my wait time
+
+HelpIntent help
+HelpIntent help me
+HelpIntent what can I ask you
+HelpIntent get help
+HelpIntent what commands can I ask
+HelpIntent what commands can I say
+HelpIntent what can I do
+HelpIntent what can I use this for
+HelpIntent what questions can I ask
+HelpIntent what can you do
+HelpIntent what do you do
+HelpIntent how do I use you
+HelpIntent how can I use you
+HelpIntent what can you tell me
