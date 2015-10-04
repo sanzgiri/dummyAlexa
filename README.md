@@ -14,7 +14,7 @@ A Jeopardy playing skill for the [Amazon Echo][echo link]. Powered by [Jservice.
 - Clone this repository
 - run `make setup`
 - run `make build`
-- Upload ArchiveDummyAlexa.zip to [Amazon Lambda][lambda link]. Note the ARN provided from the lambda function.
+- Upload ArchiveDummy.zip to [Amazon Lambda][lambda link]. Note the ARN provided from the lambda function.
 - Register for an Amazon Skills Kit developer account (free) and create a new skill
 - Paste in `speechAssets/IntentSchema.json` and `speechAssets/SampleUtterances.txt` to their respective sections under "Interaction Model"
 - Pretend the voice of Alexa is that of Alex Trebek.

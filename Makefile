@@ -1,7 +1,7 @@
 all: clean build
 
 build:
-	cd ./src; zip -r ../ArchiveDummyAlexa.zip .
+	cd ./src; zip -r ../ArchiveDummy.zip .
 	clear
 	@echo "** Build Complete **"
 setup:
@@ -9,4 +9,4 @@ setup:
 
 clean:
 	@echo "** Running Cleanup **"
-	rm -rf ArchiveDummyAlexa.zip
+	rm -rf ArchiveDummy.zip
