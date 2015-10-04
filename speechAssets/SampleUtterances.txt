@@ -1,16 +1,3 @@
-RoundIntent let's play a full game
-RoundIntent let's play a full round
-RoundIntent let's start a full game
-RoundIntent let's start a full round
-RoundIntent let's play a full game with {NumPlayers} players
-RoundIntent let's play a full round with {NumPlayers} players
-RoundIntent let's start a full game with {NumPlayers} players
-RoundIntent let's start a full round with {NumPlayers} players
-RoundIntent let's play a full game with {NumPlayers} people
-RoundIntent let's play a full round with {NumPlayers} people
-RoundIntent let's start a full game with {NumPlayers} people
-RoundIntent let's start a full round with {NumPlayers} people
-
 QuestionIntent ask me {NumToAsk} question
 QuestionIntent ask me {NumToAsk} questions
 QuestionIntent ask me {NumToAsk} random question

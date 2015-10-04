@@ -21,16 +21,6 @@
       "intent": "NextQuestionIntent",
       "slots": []
     },
-
-    {
-      "intent": "StartRoundIntent",
-      "slots": [
-        {
-          "name": "NumPlayers",
-          "type": "AMAZON.NUMBER"
-        }
-      ]
-    },
     {
       "intent": "HelpIntent",
       "slots": []
