@@ -76,6 +76,12 @@ DummySkill.prototype.intentHandlers = {
     GetDelayIntent: function (intent, session, response) {
         handleGetDelayIntent(intent, session, response);
     },
+    RepeatQuestionIntent: function (intent, session, response) {
+        handleRepeatQuestionIntent(intent, session, response);
+    },
+    RepeatAnswerIntent: function (intent, session, response) {
+        handleRepeatAnswerIntent(intent, session, response);
+    },
     FeedbackIntent: function (intent, session, response) {
         handleFeedbackIntent(intent, session, response);
     },
@@ -120,6 +126,54 @@ function handleQuitIntent(intent, session, response){
 function handleFeedbackIntent(intent, session, response){
   var speechOutput = "Dummy is written and maintained by Bill. You can find him at <say-as interpret-as=\"spell\">billxiong</say-as> dot com forward slash dummy alexa. ";
   response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
+}
+
+function handleRepeatQuestionIntent(intent, session, response){
+  var speechOutput = "";
+  if(session.attributes.QuestionStarted != true){ //session hasn't started yet
+    speechOutput = "Sorry, I haven't generated the questions yet. Try saying Alexa ask Dummy to ask me a question ";
+  }else if(intent.slots.QuestionToRepeat.value > session.attributes.NumQuestionsWanted){
+    speechOutput = "Sorry, I don't have a reference to question "+intent.slots.QuestionToRepeat.value+" of "+session.attributes.NumQuestionsWanted;
+  }else if(session.attributes.QuestionStarted && (intent.slots.QuestionToRepeat.value <= session.attributes.NumQuestionsWanted)){
+    //format question header
+    speechOutput = "Question "+intent.slots.QuestionToRepeat.value+" of "+session.attributes.NumQuestionsWanted+": <break time=\"0.5s\"/>";
+    //format question body
+    speechOutput+= session.attributes.QuestionBank[intent.slots.QuestionToRepeat.value-1].question;
+    //format question answer
+    speechOutput += " <break time=\""+config.delay+"s\"/> What is ";
+    //add the answer
+    speechOutput += session.attributes.QuestionBank[intent.slots.QuestionToRepeat.value-1].answer;
+  }else{
+    //you are out of bounds, sir!
+    speechOutput = "Sorry, I am having difficulty repeating questions at this time. Please contact my owner ";
+  }
+    speechOutput += " <break time=\"1.5s\" />Should I move on to the next question? ";
+    var repromptSpeech = "Should I read the next question? ";
+    response.ask(
+      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+    );
+}
+
+function handleRepeatAnswerIntent(intent, session, response){
+  var speechOutput = "";
+  if(!session.attributes.QuestionStarted){
+    speechOutput = "Sorry, I haven't generated the questions yet. Try saying Alexa ask Dummy to ask me a question ";
+  }else if(intent.slots.AnswerToRepeat.value > session.attributes.NumQuestionsWanted){
+    speechOutput = "Sorry, I don't have a reference to question "+intent.slots.AnswerToRepeat.value+" of "+session.attributes.NumQuestionsWanted;
+  }else if(session.attributes.QuestionStarted && (intent.slots.AnswerToRepeat.value <= session.attributes.NumQuestionsWanted)){
+    //format Answer body
+    speechOutput = "What is "+ session.attributes.QuestionBank[intent.slots.AnswerToRepeat.value-1].answer;
+  }else{
+    //you are out of bounds, sir!
+    speechOutput = "Sorry, I am having difficulty repeating questions at this time. Please contact my owner ";
+  }
+    speechOutput += " <break time=\"1.5s\" />Should I move on to the next question? ";
+    var repromptSpeech = "Should I read the next question? ";
+    response.ask(
+      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+    );
 }
 
 function handleQuestionIntent(intent, session, response){

@@ -20,6 +20,16 @@ NextQuestionIntent sure
 NextQuestionIntent yes please
 NextQuestionIntent affirmative
 
+RepeatQuestionIntent repeat question {QuestionToRepeat}
+RepeatQuestionIntent can you repeat question {QuestionToRepeat}
+
+RepeatAnswerIntent repeat answer {AnswerToRepeat}
+RepeatAnswerIntent repeat answer to question {AnswerToRepeat}
+RepeatAnswerIntent repeat the answer to question {AnswerToRepeat}
+RepeatAnswerIntent can you repeat answer {AnswerToRepeat}
+RepeatAnswerIntent can you repeat answer to question {AnswerToRepeat}
+RepeatAnswerIntent can you repeat the answer to question {AnswerToRepeat}
+
 QuitIntent no
 QuitIntent nope
 QuitIntent no thank you

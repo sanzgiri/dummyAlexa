@@ -18,6 +18,24 @@
       "slots": []
     },
     {
+      "intent": "RepeatQuestionIntent",
+      "slots": [
+        {
+          "name": "QuestionToRepeat",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "RepeatAnswerIntent",
+      "slots": [
+        {
+          "name": "AnswerToRepeat",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
       "intent": "MoreQuestionIntent",
       "slots": []
     },
