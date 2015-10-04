@@ -6,8 +6,7 @@ A Jeopardy playing skill for the [Amazon Echo][echo link]. Powered by [Jservice.
 # Requirements
 
 - One [Amazon Echo][echo link]
-- [Amazon Lambda][lambda link], free for the first 1M requests per month.
-
+- An [Amazon Lambda][lambda link] account, which provides the first 1M requests per month for free.
 
 # Setup
 
@@ -24,6 +23,13 @@ A Jeopardy playing skill for the [Amazon Echo][echo link]. Powered by [Jservice.
 - Alexa, load Dummy and ask for a random questions
 - Alexa, load Dummy and ask for [any number] of random questions
 
+### Feedback?
+
+- Alexa, ask Dummy how to submit feedback
+
+### Found something broken?
+
+- Alexa, ask Dummy how to report a bug
 
 # Contributing
 

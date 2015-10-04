@@ -31,10 +31,14 @@ QuitIntent bye now
 
 FeedbackIntent give feedback
 FeedbackIntent leave feedback
+FeedbackIntent send feedback
+FeedbackIntent submit feedback
 FeedbackIntent report a bug
 FeedbackIntent contact the creator
 FeedbackIntent how to give feedback
 FeedbackIntent how to leave feedback
+FeedbackIntent how to send feedback
+FeedbackIntent how to submit feedback
 FeedbackIntent how to report a bug
 
 ReplaceQuestionIntent can I have a different question

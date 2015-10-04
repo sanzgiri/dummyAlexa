@@ -118,7 +118,7 @@ function handleQuitIntent(intent, session, response){
 }
 
 function handleFeedbackIntent(intent, session, response){
-  var speechOutput = "Dummy is written and maintained by Bill. You can find him at <say-as interpret-as=\"spell\">billxiong</say-as> dot com forward slash alexa";
+  var speechOutput = "Dummy is written and maintained by Bill. You can find him at <say-as interpret-as=\"spell\">billxiong</say-as> dot com forward slash dummy alexa. ";
   response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
 }
 
