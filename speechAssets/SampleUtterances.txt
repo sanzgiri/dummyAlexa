@@ -6,12 +6,36 @@ QuestionIntent ask me {NumToAsk} random
 QuestionIntent ask me {NumToAsk} randoms
 QuestionIntent {NumToAsk}
 
+MoreQuestionIntent ask me more questions
+MoreQuestionIntent ask me more
+MoreQuestionIntent more
+MoreQuestionIntent more questions
+MoreQuestionIntent for more
+MoreQuestionIntent for more questions
+
 NextQuestionIntent yes
 NextQuestionIntent yep
 NextQuestionIntent yeah
 NextQuestionIntent sure
 NextQuestionIntent yes please
 NextQuestionIntent affirmative
+
+QuitIntent no
+QuitIntent nope
+QuitIntent no thank you
+QuitIntent not now
+QuitIntent negative
+QuitIntent goodbye
+QuitIntent good bye
+QuitIntent bye now
+
+FeedbackIntent give feedback
+FeedbackIntent leave feedback
+FeedbackIntent report a bug
+FeedbackIntent contact the creator
+FeedbackIntent how to give feedback
+FeedbackIntent how to leave feedback
+FeedbackIntent how to report a bug
 
 ReplaceQuestionIntent can I have a different question
 ReplaceQuestionIntent can you ask me a different question

@@ -18,11 +18,23 @@
       "slots": []
     },
     {
+      "intent": "MoreQuestionIntent",
+      "slots": []
+    },
+    {
       "intent": "HelpIntent",
       "slots": []
     },
     {
+      "intent": "QuitIntent",
+      "slots": []
+    },
+    {
       "intent": "ReplaceQuestionIntent",
+      "slots": []
+    },
+    {
+      "intent": "FeedbackIntent",
       "slots": []
     }
   ]

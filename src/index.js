@@ -67,8 +67,20 @@ DummySkill.prototype.intentHandlers = {
     NextQuestionIntent: function (intent, session, response) {
         handleNextQuestionIntent(intent, session, response);
     },
+    MoreQuestionsIntent: function (intent, session, response) {
+        handleMoreQuestionsIntent(intent, session, response);
+    },
+    QuitIntent: function (intent, session, response) {
+        handleQuitIntent(intent, session, response);
+    },
     GetDelayIntent: function (intent, session, response) {
         handleGetDelayIntent(intent, session, response);
+    },
+    FeedbackIntent: function (intent, session, response) {
+        handleFeedbackIntent(intent, session, response);
+    },
+    ReplaceQuestionIntent: function (intent, session, response) {
+        handleReplaceQuestionIntent(intent, session, response);
     },
 
     HelpIntent: function (intent, session, response) {
@@ -85,8 +97,29 @@ DummySkill.prototype.intentHandlers = {
 function getWelcomeResponse(response){
   var speechOutput = "Welcome to Dummy. How many questions should I ask? ";
   var repromptSpeech = "How many questions should I prepare? ";
-  response.ask({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-               {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML});
+  response.ask(
+    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+  );
+}
+
+function handleMoreQuestionsIntent(intent, session, response){
+  var speechOutput = "You've done well. How many more questions should I ask? ";
+  var repromptSpeech = "How many more questions should I prepare? ";
+  response.ask(
+    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+  );
+}
+
+function handleQuitIntent(intent, session, response){
+  var speechOutput = "Thank you for playing. Don't forget to send feedback by asking me how to send feedback. See you soon. ";
+  response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
+}
+
+function handleFeedbackIntent(intent, session, response){
+  var speechOutput = "Dummy is written and maintained by Bill. You can find him at <say-as interpret-as=\"spell\">billxiong</say-as> dot com forward slash alexa";
+  response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
 }
 
 function handleQuestionIntent(intent, session, response){
@@ -94,7 +127,8 @@ function handleQuestionIntent(intent, session, response){
   var speechOutput = "";
   //check that we didn't already generate questions.
   if(session.attributes.QuestionStarted){
-    //go to next question.
+    //questions already generated. Move on to next question.
+    handleNextQuestionIntent(intent, session, response);
   }else{
     cardOutput = "";
     //fetch this many questions from api.
@@ -106,13 +140,14 @@ function handleQuestionIntent(intent, session, response){
     session.attributes.NumQuestionsWanted = intent.slots.NumToAsk.value;
     session.attributes.NumQuestionsAsked = 0;
 
+    //format the question header
     speechOutput = "Question "+(session.attributes.NumQuestionsAsked+1)+" of "+intent.slots.NumToAsk.value;
     cardOutput = speechOutput+": ";
 
     //add the delay before asking the question
     speechOutput += "<break time=\"0.5s\"/>";
 
-    //query the API for questions.
+    //query the API for questions
     restler.get(config.url+'/api/random', {
       data: { count:intent.slots.NumToAsk.value },
     }).on('complete', function(result) {
@@ -123,6 +158,7 @@ function handleQuestionIntent(intent, session, response){
         response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
       } else {
         session.attributes.QuestionBank = result;
+        //format the question body
         speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
         cardOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
         //set the flag for questions started
@@ -136,16 +172,57 @@ function handleQuestionIntent(intent, session, response){
         speechOutput += "<break time=\"1.5s\" /> Should I move on to the next question? ";
         var repromptSpeech = "Shall I read the next question? "
         //process the response
-        response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},{speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
-            "D.U.M.M.Y", cardOutput);
+        response.askWithCard(
+          {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+          {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
+          "D.U.M.M.Y", cardOutput
+        );
       }
     });
   }
 }
 
 function handleNextQuestionIntent(intent, session, response){
-  var speechOutput = "What is "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;;
-  response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
+  var speechOutput = "";
+  //"load" the last question
+  var lastQuestionNumber = session.attributes.NumQuestionsAsked;
+  //up the question number
+  session.attributes.NumQuestionsAsked++;
+  //sanity checks
+  if(session.attributes.NumQuestionsAsked>= session.attributes.NumQuestionsWanted){
+    //we've gone out of bounds.
+    speechOutput = "I'm sorry, I've run out of questions to ask. How many more should I generate? ";
+    response.ask(
+      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+    );
+  }
+  //format the question header
+  speechOutput = "Question "+(session.attributes.NumQuestionsAsked+1)+" of "+session.attributes.NumQuestionsWanted;
+
+  cardOutput = speechOutput+": ";
+
+  //add the delay before asking the question
+  speechOutput += "<break time=\"0.5s\"/>";
+
+  //format the question body
+  speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
+  cardOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
+
+  //attach the answer to the card.
+  cardOutput += " Answer: "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
+  //add the delay
+  speechOutput += " <break time=\""+config.delay+"s\"/> What is ";
+  //add the answer
+  speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
+  speechOutput += "<break time=\"1.5s\" /> Should I move on to the next question? ";
+  var repromptSpeech = "Shall I read the next question? "
+  //process the response
+  response.askWithCard(
+    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    "D.U.M.M.Y", cardOutput
+  );
 }
 
 //alexa ask Dummy what is the delay
