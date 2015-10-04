@@ -91,7 +91,7 @@ function getWelcomeResponse(response){
 
 function handleQuestionIntent(intent, session, response){
   var cardOutput = "";
-
+  var speechOutput = "";
   //check that we didn't already generate questions.
   if(session.attributes.QuestionStarted){
     //go to next question.
@@ -106,11 +106,11 @@ function handleQuestionIntent(intent, session, response){
     session.attributes.NumQuestionsWanted = intent.slots.NumToAsk.value;
     session.attributes.NumQuestionsAsked = 0;
 
-    var speechOutput = "Question "+(session.attributes.NumQuestionsAsked+1)+" of "+intent.slots.NumToAsk.value;
-    var cardOutput = speechOutput;
+    speechOutput = "Question "+(session.attributes.NumQuestionsAsked+1)+" of "+intent.slots.NumToAsk.value;
+    cardOutput = speechOutput+": ";
 
     //add the delay before asking the question
-    speechOutput += "<break time=\"1s\"/>";
+    speechOutput += "<break time=\"0.5s\"/>";
 
     //query the API for questions.
     restler.get(config.url+'/api/random', {
@@ -125,28 +125,32 @@ function handleQuestionIntent(intent, session, response){
         session.attributes.QuestionBank = result;
         speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
         cardOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
-        //add the delay
-        speechOutput += " <break time=\""+config.delay+"s\"/> What is ";
-        //add the answer
-        speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
         //set the flag for questions started
-        cardOutput += " Answer: "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
         session.attributes.QuestionStarted = true;
-        //process the response.
-        response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-            "D.U.M.M.Y", cardOutput);
+        //attach the answer to the card.
+        cardOutput += " Answer: "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
+        if(config.answers_automatically_follow_question){
+          //add the delay
+          speechOutput += " <break time=\""+config.delay+"s\"/> What is ";
+          //add the answer
+          speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
+          var repromptSpeech = "Shall I read the answer? "
+          //process the response
+          response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},{speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
+              "D.U.M.M.Y", cardOutput);
+        }else{
+          //process the response.
+          response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+              "D.U.M.M.Y", cardOutput);
+        }
       }
     });
   }
-
-
 }
 
 function handleRevealAnswerIntent(intent, session, response){
-  notImplementedYet(intent, session, response);
-  //         response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-  //                 {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
-  //                 "D.U.M.M.Y", speechOutput);
+  var speechOutput = "What is "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;;
+  response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
 }
 
 //alexa ask Dummy what is the delay
