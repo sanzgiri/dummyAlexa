@@ -6,18 +6,12 @@ QuestionIntent ask me {NumToAsk} random
 QuestionIntent ask me {NumToAsk} randoms
 QuestionIntent {NumToAsk}
 
-RevealAnswerIntent what's the answer
-RevealAnswerIntent what is the answer
-RevealAnswerIntent give me the answer
-RevealAnswerIntent let's have the answer
-RevealAnswerIntent I give up
-
-RevealAnswerIntent yes
-RevealAnswerIntent yep
-RevealAnswerIntent yeah
-RevealAnswerIntent sure
-RevealAnswerIntent yes please
-RevealAnswerIntent affirmative
+NextQuestionIntent yes
+NextQuestionIntent yep
+NextQuestionIntent yeah
+NextQuestionIntent sure
+NextQuestionIntent yes please
+NextQuestionIntent affirmative
 
 ReplaceQuestionIntent can I have a different question
 ReplaceQuestionIntent can you ask me a different question

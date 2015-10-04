@@ -64,8 +64,8 @@ DummySkill.prototype.intentHandlers = {
     QuestionIntent: function (intent, session, response) {
         handleQuestionIntent(intent, session, response);
     },
-    RevealAnswerIntent: function (intent, session, response) {
-        handleRevealAnswerIntent(intent, session, response);
+    NextQuestionIntent: function (intent, session, response) {
+        handleNextQuestionIntent(intent, session, response);
     },
     GetDelayIntent: function (intent, session, response) {
         handleGetDelayIntent(intent, session, response);
@@ -129,26 +129,21 @@ function handleQuestionIntent(intent, session, response){
         session.attributes.QuestionStarted = true;
         //attach the answer to the card.
         cardOutput += " Answer: "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
-        if(config.answers_automatically_follow_question){
-          //add the delay
-          speechOutput += " <break time=\""+config.delay+"s\"/> What is ";
-          //add the answer
-          speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
-          var repromptSpeech = "Shall I read the answer? "
-          //process the response
-          response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},{speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
-              "D.U.M.M.Y", cardOutput);
-        }else{
-          //process the response.
-          response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-              "D.U.M.M.Y", cardOutput);
-        }
+        //add the delay
+        speechOutput += " <break time=\""+config.delay+"s\"/> What is ";
+        //add the answer
+        speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
+        speechOutput += "<break time=\"1.5s\" /> Should I move on to the next question? ";
+        var repromptSpeech = "Shall I read the next question? "
+        //process the response
+        response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},{speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
+            "D.U.M.M.Y", cardOutput);
       }
     });
   }
 }
 
-function handleRevealAnswerIntent(intent, session, response){
+function handleNextQuestionIntent(intent, session, response){
   var speechOutput = "What is "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;;
   response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
 }

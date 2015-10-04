@@ -14,10 +14,6 @@
       "slots": []
     },
     {
-      "intent": "RevealAnswerIntent",
-      "slots": []
-    },
-    {
       "intent": "NextQuestionIntent",
       "slots": []
     },
