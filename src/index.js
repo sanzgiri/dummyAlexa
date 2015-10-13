@@ -30,8 +30,8 @@ DummySkill.prototype.eventHandlers.onSessionStarted = function (sessionStartedRe
  */
 DummySkill.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
     console.log("DummySkill onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-
-    handleGreetIntent(session, response);
+    session.attributes = {QuestionsWanted:0, QuestionsAsked: 0, QuestionBank:{}, QuestionsStarted: false};
+    getWelcomeResponse(session, response);
 };
 
 /**
@@ -45,19 +45,13 @@ DummySkill.prototype.eventHandlers.onSessionEnded = function (sessionEndedReques
 };
 
 DummySkill.prototype.intentHandlers = {
-    ConvertIntent: function (intent, session, response) {
-      console.log("ConvertIntent Recieved");
-      handleConvertIntent(intent, session, response);
+    QuestionIntent: function (intent, session, response) {
+      console.log("QuestionIntent Recieved");
+      handleQuestionIntent(intent, session, response);
     },
-    PastConvertIntent: function (intent, session, response) {
-      console.log("PastConvertIntent Recieved");
-      handlePastConvertIntent(intent, session, response);
-    },
-    FeedbackIntent: function (intent, session, response) {
-      handleFeedbackIntent(intent, session, response);
-    },
-    BugIntent: function (intent, session, response) {
-      handleBugIntent(intent, session, response);
+    NextQuestionIntent: function (intent, session, response) {
+      console.log("NextQuestionIntent Recieved");
+      handleNextQuestionIntent(intent, session, response);
     },
 
     HelpIntent: function (intent, session, response) {
@@ -69,58 +63,52 @@ DummySkill.prototype.intentHandlers = {
     }
 }
 
-function handleGreetIntent(session, response){
-  var speechOutput = "Welcome to Currency. You can say, alexa ask currency to convert five Canadian dollars to U.S. Dollars" ;
-  response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
+function getWelcomeResponse(session, response){
+  var speechOutput = "Welcome to Dummy. How many questions should I ask? ";
+  var repromptSpeech = "How many questions should I prepare? ";
+  response.ask(
+    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+  );
 }
 
-//Alexa, ask Currency how to submit feedback
-function handleFeedbackIntent (intent, session, response){
-  var speechOutput = "You can create an issue at github.com forward slash <say-as interpret-as\"characters\">bxio</say-as> forward slash Alexa Currency. " ;
-  var cardOutput = "To submit feedback, please create an issue at http://github.com/bxio/AlexaCurrency";
-  response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      "Currency Converter", cardOutput);
-}
-
-//Alexa, ask Currency how to report a bug
-function handleBugIntent (intent, session, response){
-  var speechOutput = "Am I misbehaving? Please send an email to bill at billxiong dot com. " ;
-  var cardOutput = "Please email bill@billxiong.com";
-  response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      "Currency Converter", cardOutput);
-}
-
-
-function handlePastConvertIntent(intent, session, response){
-  //Alexa ask currency what is the conversion rate between canadian dollars and american dollars on january third two thousand and ten
-  //A date is provided, we should query fixer api instead.
+function handleQuestionIntent(intent, session, response){
   var speechOutput = "";
   var cardOutput = "";
+  //sanitize NumToAsk
+  if(intent.slots.NumToAsk.value == null || intent.slots.NumToAsk.value == undefined){
+    //user didn't provide number of questions to ask. Default to one.
+    intent.slots.NumToAsk.value = 1;
+  }
+  session.attributes.QuestionsWanted = intent.slots.NumToAsk.value;
+  session.attributes.QuestionsAsked = 1;
 
-  var path = 'http://api.fixer.io/'+intent.slots.DateOfConversion.value+'?symbols='+currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]+','+currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()];
-
-  //Lets configure and request
+  speechOutput = "Question "+session.attributes.QuestionsAsked+" of "+session.attributes.QuestionsWanted+": ";
+  //make the API call here.
   request({
-      url: path, //URL to hit
-      qs: {base: currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]}, //Query string data
+      url: options.host, //URL to hit
+      qs: {count: session.attributes.QuestionsWanted}, //Query string data
       method: 'GET', //Specify the method
     }, function(error, serverResponse, body){
       if(error) {
-        //console.log("error...");
-        speechOutput = "I'm having trouble understanding the reply from server. Send the following to my creator:"+body;
+        speechOutput = "I'm having trouble contacting the API. Send the following to my creator: "+body;
+        cardOutput += "body:"+body;
       } else {
         //console.log(serverResponse.statusCode, body);
         rsp = JSON.parse(body);
-        // speechOutput = "URL:"+path;
-        speechOutput += " The rate between "+intent.slots.Source.value+" and "+intent.slots.Destination.value+" was "+rsp.rates[currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]];
-        cardOutput += +rsp.rates[currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]];
+        speechOutput += "response:"+rsp;
       }
-      response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-        "Currency Converter", cardOutput);
+      response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+          "D.U.M.M.Y", cardOutput);
   });
 
-  // response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-  //   "Currency Converter", cardOutput);
+  // speechOutput += "Ready for the next question? ";
+  // repromptSpeech = "Shall I move on to the next question? ";
+  // response.ask(
+  //   {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+  //   {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+  // );
+
 }
 
 //alexa ask currency how much is five U.S.D. in C.A.D.
