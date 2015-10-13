@@ -1,24 +1,12 @@
 /**
- * App ID for the skill
- */
-var APP_ID = options.appid;//replace with 'amzn1.echo-sdk-ams.app.[your-unique-value-here]';
-
-/**
- * Array containing knock knock jokes.
- */
-
-/**
  * The AlexaSkill prototype and helper functions
  */
 var AlexaSkill = require('./AlexaSkill');
-var options = require('./options.js');
-var restler = require('restler');
-/**
- * DummySkill is a child of AlexaSkill.
- * To read more about inheritance in JavaScript, see the link below.
- *
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Introduction_to_Object-Oriented_JavaScript#Inheritance
- */
+var options = require('./options');
+var request = require('request');
+
+var APP_ID = options.appid;
+
 var DummySkill = function () {
     AlexaSkill.call(this, APP_ID);
 };
@@ -33,6 +21,7 @@ DummySkill.prototype.constructor = DummySkill;
 DummySkill.prototype.eventHandlers.onSessionStarted = function (sessionStartedRequest, session) {
     console.log("onSessionStarted requestId: " + sessionStartedRequest.requestId
         + ", sessionId: " + session.sessionId);
+
     // Any session init logic would go here.
 };
 
@@ -41,9 +30,8 @@ DummySkill.prototype.eventHandlers.onSessionStarted = function (sessionStartedRe
  */
 DummySkill.prototype.eventHandlers.onLaunch = function (launchRequest, session, response) {
     console.log("DummySkill onLaunch requestId: " + launchRequest.requestId + ", sessionId: " + session.sessionId);
-    //set session attributes
-    session.attributes = {NumQuestionsAsked:0, NumQuestionsWanted:0, QuestionStarted: false,QuestionBank: []};
-    getWelcomeResponse(response);
+
+    handleGreetIntent(session, response);
 };
 
 /**
@@ -57,246 +45,136 @@ DummySkill.prototype.eventHandlers.onSessionEnded = function (sessionEndedReques
 };
 
 DummySkill.prototype.intentHandlers = {
-    QuestionIntent: function (intent, session, response) {
-        handleQuestionIntent(intent, session, response);
+    ConvertIntent: function (intent, session, response) {
+      console.log("ConvertIntent Recieved");
+      handleConvertIntent(intent, session, response);
     },
-    NextQuestionIntent: function (intent, session, response) {
-        handleNextQuestionIntent(intent, session, response);
-    },
-    MoreQuestionsIntent: function (intent, session, response) {
-        handleMoreQuestionsIntent(intent, session, response);
-    },
-    QuitIntent: function (intent, session, response) {
-        handleQuitIntent(intent, session, response);
-    },
-    GetDelayIntent: function (intent, session, response) {
-        handleGetDelayIntent(intent, session, response);
-    },
-    RepeatQuestionIntent: function (intent, session, response) {
-        handleRepeatQuestionIntent(intent, session, response);
-    },
-    RepeatAnswerIntent: function (intent, session, response) {
-        handleRepeatAnswerIntent(intent, session, response);
+    PastConvertIntent: function (intent, session, response) {
+      console.log("PastConvertIntent Recieved");
+      handlePastConvertIntent(intent, session, response);
     },
     FeedbackIntent: function (intent, session, response) {
-        handleFeedbackIntent(intent, session, response);
+      handleFeedbackIntent(intent, session, response);
     },
-    ReplaceQuestionIntent: function (intent, session, response) {
-        handleReplaceQuestionIntent(intent, session, response);
+    BugIntent: function (intent, session, response) {
+      handleBugIntent(intent, session, response);
     },
 
     HelpIntent: function (intent, session, response) {
-        var speechOutput = "";
+      var speechOutput = "Please consult README for instructions on how to use this skill. ";
 
-        speechOutput = "Please consult the README document for usage and things to try. ";
-
-        // For the repromptText, play the speechOutput again
-        response.ask({speech: speechOutput, type: AlexaSkill.speechOutput.PLAIN_TEXT},
-                {speech: speechOutput, type: AlexaSkill.speechOutput.PLAIN_TEXT});
+      // For the repromptText, play the speechOutput again
+      response.ask({speech: speechOutput, type: AlexaSkill.speechOutput.PLAIN_TEXT},
+                   {speech: speechOutput, type: AlexaSkill.speechOutput.PLAIN_TEXT});
     }
 }
 
-function getWelcomeResponse(response){
-  var speechOutput = "Welcome to Dummy. How many questions should I ask? ";
-  var repromptSpeech = "How many questions should I prepare? ";
-  response.ask(
-    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
-  );
-}
-
-function handleMoreQuestionsIntent(intent, session, response){
-  var speechOutput = "You've done well. How many more questions should I ask? ";
-  var repromptSpeech = "How many more questions should I prepare? ";
-  response.ask(
-    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
-  );
-}
-
-function handleQuitIntent(intent, session, response){
-  var speechOutput = "Thank you for playing. Don't forget to send feedback by asking me how to send feedback. See you soon. ";
+function handleGreetIntent(session, response){
+  var speechOutput = "Welcome to Currency. You can say, alexa ask currency to convert five Canadian dollars to U.S. Dollars" ;
   response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
 }
 
-function handleFeedbackIntent(intent, session, response){
-  var speechOutput = "Dummy is written and maintained by Bill. You can find him at <say-as interpret-as=\"spell\">billxiong</say-as> dot com forward slash dummy alexa. ";
-  response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
-}
-
-function handleRepeatQuestionIntent(intent, session, response){
-  var speechOutput = "";
-  if(session.attributes.QuestionStarted != true){ //session hasn't started yet
-    speechOutput = "Sorry, I haven't generated the questions yet. Try saying Alexa ask Dummy to ask me a question ";
-  }else if(intent.slots.QuestionToRepeat.value > session.attributes.NumQuestionsWanted){
-    speechOutput = "Sorry, I don't have a reference to question "+intent.slots.QuestionToRepeat.value+" of "+session.attributes.NumQuestionsWanted;
-  }else if(session.attributes.QuestionStarted && (intent.slots.QuestionToRepeat.value <= session.attributes.NumQuestionsWanted)){
-    //format question header
-    speechOutput = "Question "+intent.slots.QuestionToRepeat.value+" of "+session.attributes.NumQuestionsWanted+": <break time=\"0.5s\"/>";
-    //format question body
-    speechOutput+= session.attributes.QuestionBank[intent.slots.QuestionToRepeat.value-1].question;
-    //format question answer
-    speechOutput += " <break time=\""+options.delay+"s\"/> What is ";
-    //add the answer
-    speechOutput += session.attributes.QuestionBank[intent.slots.QuestionToRepeat.value-1].answer;
-  }else{
-    //you are out of bounds, sir!
-    speechOutput = "Sorry, I am having difficulty repeating questions at this time. Please contact my owner ";
-  }
-    speechOutput += " <break time=\"1.5s\" />Should I move on to the next question? ";
-    var repromptSpeech = "Should I read the next question? ";
-    response.ask(
-      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
-    );
-}
-
-function handleRepeatAnswerIntent(intent, session, response){
-  var speechOutput = "";
-  if(!session.attributes.QuestionStarted){
-    speechOutput = "Sorry, I haven't generated the questions yet. Try saying Alexa ask Dummy to ask me a question ";
-  }else if(intent.slots.AnswerToRepeat.value > session.attributes.NumQuestionsWanted){
-    speechOutput = "Sorry, I don't have a reference to question "+intent.slots.AnswerToRepeat.value+" of "+session.attributes.NumQuestionsWanted;
-  }else if(session.attributes.QuestionStarted && (intent.slots.AnswerToRepeat.value <= session.attributes.NumQuestionsWanted)){
-    //format Answer body
-    speechOutput = "What is "+ session.attributes.QuestionBank[intent.slots.AnswerToRepeat.value-1].answer;
-  }else{
-    //you are out of bounds, sir!
-    speechOutput = "Sorry, I am having difficulty repeating questions at this time. Please contact my owner ";
-  }
-    speechOutput += " <break time=\"1.5s\" />Should I move on to the next question? ";
-    var repromptSpeech = "Should I read the next question? ";
-    response.ask(
-      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
-    );
-}
-
-function handleQuestionIntent(intent, session, response){
-  var cardOutput = "";
-  var speechOutput = "";
-  //check that we didn't already generate questions.
-  if(session.attributes.QuestionStarted){
-    //questions already generated. Move on to next question.
-    handleNextQuestionIntent(intent, session, response);
-  }else{
-    cardOutput = "";
-    //fetch this many questions from api.
-    //sanitize NumToAsk
-    if(intent.slots.NumToAsk.value == null || intent.slots.NumToAsk.value == undefined){
-      intent.slots.NumToAsk.value = 1;
-    }
-    //set session attributes
-    session.attributes.NumQuestionsWanted = intent.slots.NumToAsk.value;
-    session.attributes.NumQuestionsAsked = 0;
-
-    //format the question header
-    speechOutput = "Question "+(session.attributes.NumQuestionsAsked+1)+" of "+intent.slots.NumToAsk.value;
-    cardOutput = speechOutput+": ";
-
-    //add the delay before asking the question
-    speechOutput += "<break time=\"0.5s\"/>";
-
-    //query the API for questions
-    restler.get(options.url+'/api/random', {
-      data: { count:intent.slots.NumToAsk.value },
-    }).on('complete', function(result) {
-      if (result instanceof Error) {
-        console.log('Error:', result.message);
-        speechOutput = "Sorry, I'm having trouble retrieving the questions. ";
-        // this.retry(5000); // try again after 5 sec
-        response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
-      } else {
-        session.attributes.QuestionBank = result;
-        //format the question body
-        speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
-        cardOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
-        //set the flag for questions started
-        session.attributes.QuestionStarted = true;
-        //attach the answer to the card.
-        cardOutput += ". Answer: "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
-        //add the delay
-        speechOutput += " <break time=\""+options.delay+"s\"/> What is ";
-        //add the answer
-        speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
-        speechOutput += "<break time=\"1.5s\" /> Should I move on to the next question? ";
-        var repromptSpeech = "Shall I read the next question? "
-        //process the response
-        response.askWithCard(
-          {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-          {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
-          "D.U.M.M.Y", cardOutput
-        );
-      }
-    });
-  }
-}
-
-function handleNextQuestionIntent(intent, session, response){
-  var speechOutput = "";
-  //check that session has started.
-  if(!session.attributes.QuestionStarted){
-    speechOutput = "I haven't prepared your questions yet. How many questions should I ask? ";
-    var repromptSpeech = "How many questions should I prepare? ";
-    response.ask(
-      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
-    );
-  }
-  //"load" the last question
-  var lastQuestionNumber = session.attributes.NumQuestionsAsked;
-  //up the question number
-  session.attributes.NumQuestionsAsked++;
-  //sanity checks
-  if(session.attributes.NumQuestionsAsked>= session.attributes.NumQuestionsWanted){
-    //we've gone out of bounds.
-    speechOutput = "I'm sorry, I've run out of questions to ask. How many more should I generate? ";
-    response.ask(
-      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
-    );
-  }
-  //format the question header
-  speechOutput = "Question "+(session.attributes.NumQuestionsAsked+1)+" of "+session.attributes.NumQuestionsWanted;
-
-  cardOutput = speechOutput+": ";
-
-
-  //add the delay before asking the question
-  speechOutput += "<break time=\"0.5s\"/ >";
-
-  //format the question body
-  speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
-  cardOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].question;
-  /*
-  //attach the answer to the card.
-  cardOutput += ". Answer: "+session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
-  //add the delay
-  speechOutput += " <break time=\""+options.delay+"s\"/> What is ";
-  //add the answer
-  speechOutput += session.attributes.QuestionBank[session.attributes.NumQuestionsAsked].answer;
-  speechOutput += "<break time=\"1.5s\" /> Should I move on to the next question? ";
-  var repromptSpeech = "Shall I read the next question? ";
-*/
-  //process the response
-  response.askWithCard(
-    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
-    "D.U.M.M.Y", cardOutput
-  );
-}
-
-//alexa ask Dummy what is the delay
-function handleGetDelayIntent(intent, session, response){
-  var speechOutput = "The delay is "+options.delay+" seconds. ";
-  var cardOutput = speechOutput+" Change this in the options. ";
+//Alexa, ask Currency how to submit feedback
+function handleFeedbackIntent (intent, session, response){
+  var speechOutput = "You can create an issue at github.com forward slash <say-as interpret-as\"characters\">bxio</say-as> forward slash Alexa Currency. " ;
+  var cardOutput = "To submit feedback, please create an issue at http://github.com/bxio/AlexaCurrency";
   response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      "D.U.M.M.Y", cardOutput);
+      "Currency Converter", cardOutput);
 }
 
-function notImplementedYet(intent, session, response){
-  var speechOutput = "Sorry, Bill hasn't taught me how to handle this yet.";
-  response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
+//Alexa, ask Currency how to report a bug
+function handleBugIntent (intent, session, response){
+  var speechOutput = "Am I misbehaving? Please send an email to bill at billxiong dot com. " ;
+  var cardOutput = "Please email bill@billxiong.com";
+  response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+      "Currency Converter", cardOutput);
+}
+
+
+function handlePastConvertIntent(intent, session, response){
+  //Alexa ask currency what is the conversion rate between canadian dollars and american dollars on january third two thousand and ten
+  //A date is provided, we should query fixer api instead.
+  var speechOutput = "";
+  var cardOutput = "";
+
+  var path = 'http://api.fixer.io/'+intent.slots.DateOfConversion.value+'?symbols='+currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]+','+currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()];
+
+  //Lets configure and request
+  request({
+      url: path, //URL to hit
+      qs: {base: currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]}, //Query string data
+      method: 'GET', //Specify the method
+    }, function(error, serverResponse, body){
+      if(error) {
+        //console.log("error...");
+        speechOutput = "I'm having trouble understanding the reply from server. Send the following to my creator:"+body;
+      } else {
+        //console.log(serverResponse.statusCode, body);
+        rsp = JSON.parse(body);
+        // speechOutput = "URL:"+path;
+        speechOutput += " The rate between "+intent.slots.Source.value+" and "+intent.slots.Destination.value+" was "+rsp.rates[currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]];
+        cardOutput += +rsp.rates[currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]];
+      }
+      response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+        "Currency Converter", cardOutput);
+  });
+
+  // response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+  //   "Currency Converter", cardOutput);
+}
+
+//alexa ask currency how much is five U.S.D. in C.A.D.
+//alexa ask currency to convert five american dollars to canadian
+//alexa load currency and ask how much is two hundred thousand yuan in canadian dollars
+function handleConvertIntent(intent, session, response){
+  var parsedAmount = 1;
+  //sanitize and convert amount
+  if(intent.slots.AmountWhole.value == null){
+    //user didn't provide whole amount
+    intent.slots.AmountWhole.value = 1;
+    parsedAmount = 1;
+  }else{
+    parsedAmount = intent.slots.AmountWhole.value;
+  }
+  //check the source and destination input
+
+  var speechOutput = "";
+
+  var cardOutput = "Converting "+parsedAmount+" "+currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]+" to "+currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]+" ";
+
+  //query currency-api
+  request({
+      url: getURL(intent), //URL to hit
+      qs: {amount: parsedAmount}, //Query string data
+      method: 'GET', //Specify the method
+    }, function(error, serverResponse, body){
+      if(error) {
+        speechOutput = "I'm having trouble contacting the API. Send the following to my creator: "+body;
+        cardOutput += ". URL:"+getURL(intent);
+      } else {
+        //console.log(serverResponse.statusCode, body);
+        rsp = JSON.parse(body);
+        if(intent.slots.AmountWhole.value == 1 || intent.slots.AmountWhole.value == null){
+          speechOutput = parsedAmount + " "+ currency.SymbolsToWords[rsp.source][0];
+        }else{
+          speechOutput = parsedAmount + " "+ currency.SymbolsToWords[rsp.source][1];
+        }
+        speechOutput += " is "+rsp.amount+ " in "+currency.SymbolsToWords[rsp.target][1];
+        cardOutput += parsedAmount +" "+rsp.source+"@"+rsp.rate+"="+rsp.amount+" "+rsp.target+". ";
+      }
+      response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+          "Currency Converter", cardOutput);
+  });
+
+    // speechOutput = cardOutput;
+    // response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    //  "Currency Converter", cardOutput);
+}
+
+function getURL(intent){
+  //https://currency-api.appspot.com/api/{source}/{target}.{format}
+  var append = "/"+currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]+"/"+currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]+".json";
+  return options.host+append;
 }
 
 // Create the handler that responds to the Alexa Request.
