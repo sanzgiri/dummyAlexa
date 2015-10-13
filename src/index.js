@@ -96,11 +96,11 @@ function handleQuestionIntent(intent, session, response){
       } else {
         session.attributes.QuestionsStarted = true;
         //console.log(serverResponse.statusCode, body);
+        //store the questions into the session
         session.attributes.QuestionBank = JSON.parse(body);
+        //build the response
         var currentQuestion = session.attributes.QuestionBank[session.attributes.QuestionsAsked];
-        speechOutput += "from the category "+currentQuestion.category.title;
-        speechOutput += "<break time=\"1s\"/> ";
-        speechOutput += currentQuestion.question;
+        speechOutput = buildResponseFromQuestion(session, currentQuestion);
       }
       response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
           "D.U.M.M.Y", cardOutput);
@@ -113,6 +113,14 @@ function handleQuestionIntent(intent, session, response){
   //   {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
   // );
 
+}
+
+function buildResponseFromQuestion(session, question){
+  var speechOutput = "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted;
+  speechOutput += " from the category "+question.category.title+"<break time=\"1s\"/> ";
+  speechOutput += question.question+"<break time=\""+options.delayBeforeAnswer+"s\"/> ";
+  speechOutput += "What is "+question.answer;
+  return speechOutput;
 }
 
 // Create the handler that responds to the Alexa Request.
