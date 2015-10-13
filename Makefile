@@ -6,7 +6,7 @@ build:
 	@echo "** Build Complete **"
 
 setup:
-	sudo npm install --prefix ./src restler
+	sudo npm install --prefix ./src http request
 
 edit:
 	open src/index.js speechAssets/IntentSchema.json speechAssets/SampleUtterances.txt
