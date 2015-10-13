@@ -26,6 +26,11 @@ MoreQuestionIntent more questions
 MoreQuestionIntent for more
 MoreQuestionIntent for more questions
 
+PauseIntent no
+PauseIntent nope
+PauseIntent pause
+PauseIntent stop for a sec
+
 HelpIntent help
 HelpIntent help me
 HelpIntent what can I ask you

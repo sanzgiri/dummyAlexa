@@ -57,9 +57,13 @@ DummySkill.prototype.intentHandlers = {
       console.log("MoreQuestionIntent Recieved");
       handleMoreQuestionIntent(intent, session, response);
     },
+    PauseIntent: function (intent, session, response) {
+      console.log("PauseIntent Recieved");
+      handlePauseIntent(intent, session, response);
+    },
 
     HelpIntent: function (intent, session, response) {
-      var speechOutput = "Please consult README for instructions on how to use this skill. ";
+      var speechOutput = "Please consult "+options.homepage+" for instructions on how to use this skill. ";
 
       // For the repromptText, play the speechOutput again
       response.ask({speech: speechOutput, type: AlexaSkill.speechOutput.PLAIN_TEXT},
@@ -116,6 +120,23 @@ function handleQuestionIntent(intent, session, response){
 
 }
 
+function handleNextQuestionIntent(intent, session, response){
+  var speechOutput = "";
+  var cardOutput = "";
+  var repromptSpeech = "Shall I move on to the next question? ";
+
+  //check if questions have started
+  if(!session.attributes.QuestionsStarted){
+    getWelcomeResponse(session, response);
+  }
+
+  //cache the last question and increase counter
+  session.attributes.QuestionsAsked += 1;
+  speechOutput = buildResponseFromQuestion(session);
+  response.tell(
+    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML}
+  );
+}
 
 function handleMoreQuestionsIntent(intent, session, response){
   var speechOutput = "You've done well. How many more questions should I ask? ";
@@ -126,13 +147,22 @@ function handleMoreQuestionsIntent(intent, session, response){
   );
 }
 
+function handlePauseIntent(intent, session, response){
+  var speechOutput = "OK. Let me know when you're ready. ";
+  var repromptSpeech = "Should I move on to the next question? ";
+  response.ask(
+    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+  );
+}
+
 function buildResponseFromQuestion(session){
   var question = session.attributes.QuestionBank[session.attributes.QuestionsAsked];
   var speechOutput = "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted;
-  speechOutput += " from the category "+question.category.title+"<break time=\"1s\"/> ";
+  speechOutput += ", from the category "+question.category.title+"<break time=\"1s\"/> ";
   speechOutput += question.question+"<break time=\""+options.delayBeforeAnswer+"s\"/> ";
   speechOutput += "What is "+question.answer;
-  speechOutput += "Ready for the next question? ";
+  speechOutput += "<break time=\"1s\"/> Ready for the next question? ";
   return speechOutput;
 }
 

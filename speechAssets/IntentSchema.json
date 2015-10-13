@@ -18,6 +18,10 @@
       "slots": []
     },
     {
+      "intent": "PauseIntent",
+      "slots": []
+    },
+    {
       "intent": "HelpIntent",
       "slots": []
     }
