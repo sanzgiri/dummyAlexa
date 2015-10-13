@@ -1,71 +1,20 @@
-QuestionIntent ask me {NumToAsk} question
-QuestionIntent ask me {NumToAsk} questions
-QuestionIntent ask me {NumToAsk} random question
-QuestionIntent ask me {NumToAsk} random questions
-QuestionIntent ask me {NumToAsk} random
-QuestionIntent ask me {NumToAsk} randoms
 QuestionIntent {NumToAsk}
-
-MoreQuestionIntent ask me more questions
-MoreQuestionIntent ask me more
-MoreQuestionIntent more
-MoreQuestionIntent more questions
-MoreQuestionIntent for more
-MoreQuestionIntent for more questions
+QuestionIntent ask {NumToAsk} question
+QuestionIntent ask {NumToAsk} questions
+QuestionIntent ask {NumToAsk} random question
+QuestionIntent ask {NumToAsk} random questions
+QuestionIntent to ask {NumToAsk} question
+QuestionIntent to ask {NumToAsk} questions
+QuestionIntent to ask {NumToAsk} random question
+QuestionIntent to ask {NumToAsk} random questions
+QuestionIntent for {NumToAsk} question
+QuestionIntent for {NumToAsk} questions
+QuestionIntent for {NumToAsk} random question
+QuestionIntent for {NumToAsk} random questions
 
 NextQuestionIntent yes
-NextQuestionIntent yep
-NextQuestionIntent yeah
-NextQuestionIntent sure
 NextQuestionIntent yes please
-NextQuestionIntent affirmative
-
-RepeatQuestionIntent repeat question {QuestionToRepeat}
-RepeatQuestionIntent can you repeat question {QuestionToRepeat}
-
-RepeatAnswerIntent repeat answer {AnswerToRepeat}
-RepeatAnswerIntent repeat answer to question {AnswerToRepeat}
-RepeatAnswerIntent repeat the answer to question {AnswerToRepeat}
-RepeatAnswerIntent can you repeat answer {AnswerToRepeat}
-RepeatAnswerIntent can you repeat answer to question {AnswerToRepeat}
-RepeatAnswerIntent can you repeat the answer to question {AnswerToRepeat}
-
-QuitIntent no
-QuitIntent nope
-QuitIntent no thank you
-QuitIntent not now
-QuitIntent negative
-QuitIntent goodbye
-QuitIntent good bye
-QuitIntent bye now
-
-FeedbackIntent give feedback
-FeedbackIntent leave feedback
-FeedbackIntent send feedback
-FeedbackIntent submit feedback
-FeedbackIntent report a bug
-FeedbackIntent contact the creator
-FeedbackIntent how to give feedback
-FeedbackIntent how to leave feedback
-FeedbackIntent how to send feedback
-FeedbackIntent how to submit feedback
-FeedbackIntent how to report a bug
-
-ReplaceQuestionIntent can I have a different question
-ReplaceQuestionIntent can you ask me a different question
-ReplaceQuestionIntent can you replace this question
-ReplaceQuestionIntent can you replace this question for me
-
-GetDelayIntent can you tell me what is the delay
-GetDelayIntent can you tell me the delay
-GetDelayIntent what is the delay
-GetDelayIntent what is the wait time
-GetDelayIntent what is my delay
-GetDelayIntent what is my wait time
-GetDelayIntent what's the delay
-GetDelayIntent what's the wait time
-GetDelayIntent what's my delay
-GetDelayIntent what's my wait time
+NextQuestionIntent yeah
 
 HelpIntent help
 HelpIntent help me

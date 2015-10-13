@@ -1,58 +1,20 @@
 {
   "intents": [
     {
-      "intent": "QuestionIntent",
-      "slots": [
-        {
-          "name": "NumToAsk",
-          "type": "AMAZON.NUMBER"
-        }
-      ]
-    },
-    {
-      "intent": "GetDelayIntent",
-      "slots": []
+     "intent": "QuestionIntent",
+     "slots": [
+      {
+        "name": "NumToAsk",
+        "type": "AMAZON.NUMBER"
+      }
+     ]
     },
     {
       "intent": "NextQuestionIntent",
       "slots": []
     },
     {
-      "intent": "RepeatQuestionIntent",
-      "slots": [
-        {
-          "name": "QuestionToRepeat",
-          "type": "AMAZON.NUMBER"
-        }
-      ]
-    },
-    {
-      "intent": "RepeatAnswerIntent",
-      "slots": [
-        {
-          "name": "AnswerToRepeat",
-          "type": "AMAZON.NUMBER"
-        }
-      ]
-    },
-    {
-      "intent": "MoreQuestionIntent",
-      "slots": []
-    },
-    {
       "intent": "HelpIntent",
-      "slots": []
-    },
-    {
-      "intent": "QuitIntent",
-      "slots": []
-    },
-    {
-      "intent": "ReplaceQuestionIntent",
-      "slots": []
-    },
-    {
-      "intent": "FeedbackIntent",
       "slots": []
     }
   ]
