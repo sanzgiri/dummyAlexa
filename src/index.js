@@ -53,6 +53,10 @@ DummySkill.prototype.intentHandlers = {
       console.log("NextQuestionIntent Recieved");
       handleNextQuestionIntent(intent, session, response);
     },
+    MoreQuestionIntent: function (intent, session, response) {
+      console.log("MoreQuestionIntent Recieved");
+      handleMoreQuestionIntent(intent, session, response);
+    },
 
     HelpIntent: function (intent, session, response) {
       var speechOutput = "Please consult README for instructions on how to use this skill. ";
@@ -83,7 +87,7 @@ function handleQuestionIntent(intent, session, response){
   }
   session.attributes.QuestionsWanted = intent.slots.NumToAsk.value;
   session.attributes.QuestionsAsked = 0;
-  speechOutput = "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted+" ";
+
   //make the API call here.
   request({
       url: options.host, //URL to hit
@@ -99,27 +103,36 @@ function handleQuestionIntent(intent, session, response){
         //store the questions into the session
         session.attributes.QuestionBank = JSON.parse(body);
         //build the response
-        var currentQuestion = session.attributes.QuestionBank[session.attributes.QuestionsAsked];
-        speechOutput = buildResponseFromQuestion(session, currentQuestion);
+        speechOutput = buildResponseFromQuestion(session);
       }
-      response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-          "D.U.M.M.Y", cardOutput);
+      //process the response
+      var repromptSpeech = "Shall I move on to the next question? ";
+      response.askWithCard(
+        {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+        {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
+        "D.U.M.M.Y", cardOutput
+      );
   });
-
-  // speechOutput += "Ready for the next question? ";
-  // repromptSpeech = "Shall I move on to the next question? ";
-  // response.ask(
-  //   {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-  //   {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
-  // );
 
 }
 
-function buildResponseFromQuestion(session, question){
+
+function handleMoreQuestionsIntent(intent, session, response){
+  var speechOutput = "You've done well. How many more questions should I ask? ";
+  var repromptSpeech = "How many more questions should I prepare? ";
+  response.ask(
+    {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+    {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
+  );
+}
+
+function buildResponseFromQuestion(session){
+  var question = session.attributes.QuestionBank[session.attributes.QuestionsAsked];
   var speechOutput = "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted;
   speechOutput += " from the category "+question.category.title+"<break time=\"1s\"/> ";
   speechOutput += question.question+"<break time=\""+options.delayBeforeAnswer+"s\"/> ";
   speechOutput += "What is "+question.answer;
+  speechOutput += "Ready for the next question? ";
   return speechOutput;
 }
 

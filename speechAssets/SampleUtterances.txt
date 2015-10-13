@@ -13,8 +13,18 @@ QuestionIntent for {NumToAsk} random question
 QuestionIntent for {NumToAsk} random questions
 
 NextQuestionIntent yes
-NextQuestionIntent yes please
+NextQuestionIntent yep
 NextQuestionIntent yeah
+NextQuestionIntent sure
+NextQuestionIntent yes please
+NextQuestionIntent affirmative
+
+MoreQuestionIntent ask me more questions
+MoreQuestionIntent ask me more
+MoreQuestionIntent more
+MoreQuestionIntent more questions
+MoreQuestionIntent for more
+MoreQuestionIntent for more questions
 
 HelpIntent help
 HelpIntent help me
