@@ -72,6 +72,7 @@ function getWelcomeResponse(session, response){
   );
 }
 
+//alexa load dummy and ask for two random questions
 function handleQuestionIntent(intent, session, response){
   var speechOutput = "";
   var cardOutput = "";
@@ -81,9 +82,8 @@ function handleQuestionIntent(intent, session, response){
     intent.slots.NumToAsk.value = 1;
   }
   session.attributes.QuestionsWanted = intent.slots.NumToAsk.value;
-  session.attributes.QuestionsAsked = 1;
-
-  speechOutput = "Question "+session.attributes.QuestionsAsked+" of "+session.attributes.QuestionsWanted+": ";
+  session.attributes.QuestionsAsked = 0;
+  speechOutput = "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted+" ";
   //make the API call here.
   request({
       url: options.host, //URL to hit
@@ -94,9 +94,13 @@ function handleQuestionIntent(intent, session, response){
         speechOutput = "I'm having trouble contacting the API. Send the following to my creator: "+body;
         cardOutput += "body:"+body;
       } else {
+        session.attributes.QuestionsStarted = true;
         //console.log(serverResponse.statusCode, body);
-        rsp = JSON.parse(body);
-        speechOutput += "response:"+rsp;
+        session.attributes.QuestionBank = JSON.parse(body);
+        var currentQuestion = session.attributes.QuestionBank[session.attributes.QuestionsAsked];
+        speechOutput += "from the category "+currentQuestion.category.title;
+        speechOutput += "<break time=\"1s\"/> ";
+        speechOutput += currentQuestion.question;
       }
       response.askWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
           "D.U.M.M.Y", cardOutput);
@@ -109,60 +113,6 @@ function handleQuestionIntent(intent, session, response){
   //   {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML}
   // );
 
-}
-
-//alexa ask currency how much is five U.S.D. in C.A.D.
-//alexa ask currency to convert five american dollars to canadian
-//alexa load currency and ask how much is two hundred thousand yuan in canadian dollars
-function handleConvertIntent(intent, session, response){
-  var parsedAmount = 1;
-  //sanitize and convert amount
-  if(intent.slots.AmountWhole.value == null){
-    //user didn't provide whole amount
-    intent.slots.AmountWhole.value = 1;
-    parsedAmount = 1;
-  }else{
-    parsedAmount = intent.slots.AmountWhole.value;
-  }
-  //check the source and destination input
-
-  var speechOutput = "";
-
-  var cardOutput = "Converting "+parsedAmount+" "+currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]+" to "+currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]+" ";
-
-  //query currency-api
-  request({
-      url: getURL(intent), //URL to hit
-      qs: {amount: parsedAmount}, //Query string data
-      method: 'GET', //Specify the method
-    }, function(error, serverResponse, body){
-      if(error) {
-        speechOutput = "I'm having trouble contacting the API. Send the following to my creator: "+body;
-        cardOutput += ". URL:"+getURL(intent);
-      } else {
-        //console.log(serverResponse.statusCode, body);
-        rsp = JSON.parse(body);
-        if(intent.slots.AmountWhole.value == 1 || intent.slots.AmountWhole.value == null){
-          speechOutput = parsedAmount + " "+ currency.SymbolsToWords[rsp.source][0];
-        }else{
-          speechOutput = parsedAmount + " "+ currency.SymbolsToWords[rsp.source][1];
-        }
-        speechOutput += " is "+rsp.amount+ " in "+currency.SymbolsToWords[rsp.target][1];
-        cardOutput += parsedAmount +" "+rsp.source+"@"+rsp.rate+"="+rsp.amount+" "+rsp.target+". ";
-      }
-      response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-          "Currency Converter", cardOutput);
-  });
-
-    // speechOutput = cardOutput;
-    // response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-    //  "Currency Converter", cardOutput);
-}
-
-function getURL(intent){
-  //https://currency-api.appspot.com/api/{source}/{target}.{format}
-  var append = "/"+currency.WordsToSymbols[intent.slots.Source.value.toLowerCase()]+"/"+currency.WordsToSymbols[intent.slots.Destination.value.toLowerCase()]+".json";
-  return options.host+append;
 }
 
 // Create the handler that responds to the Alexa Request.
