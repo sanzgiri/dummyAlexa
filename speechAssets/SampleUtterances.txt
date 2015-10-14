@@ -12,12 +12,26 @@ GenerateQuestionsIntent ask me {NumToAsk} questions
 GenerateQuestionsIntent ask me {NumToAsk} random question
 GenerateQuestionsIntent ask me {NumToAsk} random questions
 
+AskQuestionsIntent yes
+AskQuestionsIntent yes please
+AskQuestionsIntent yeah
+AskQuestionsIntent sure
+AskQuestionsIntent affirmative
 AskQuestionsIntent ask {QuestionToAsk}
 AskQuestionsIntent ask question {QuestionToAsk}
 AskQuestionsIntent repeat {QuestionToAsk}
 AskQuestionsIntent repeat question {QuestionToAsk}
 AskQuestionsIntent say {QuestionToAsk} again
 AskQuestionsIntent say question {QuestionToAsk} again
+
+MoreQuestionsIntent generate more questions
+MoreQuestionsIntent find more questions
+MoreQuestionsIntent find me more questions
+MoreQuestionsIntent make up more questions
+MoreQuestionsIntent give me more questions
+MoreQuestionsIntent ask me more questions
+
+
 
 FeedbackIntent how to submit feedback
 FeedbackIntent to submit feedback

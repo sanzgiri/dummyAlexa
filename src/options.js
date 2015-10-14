@@ -1,12 +1,5 @@
-var options = {
+module.exports = {
   appid: "amzn1.echo-sdk-ams.app.6c79a1ba-d98d-4368-a42e-3f65258014d2",
-  host: "http://jservice.io/api/random",
-  delayBeforeAnswer: 5,
-  homepage: "alexa<say-as interpret-as \"characters\">io</say-as> dot com forward slash dummy",
-  homepageurl: "http://alexaio.com/dummy"
-  //http://currency-api.appspot.com/api/{source}/{target}.{format}
-  //host: "http://api.fixer.io/latest?symbols=USD,BTC",
-  //http://api.fixer.io/latest?symbols={source},{target}
+  remoteAPI: "http://jservice.io/api/random",
+  delayBeforeAnswer: 5
 };
-
-module.exports = options;

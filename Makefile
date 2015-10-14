@@ -9,7 +9,7 @@ setup:
 	sudo npm install --prefix ./src http request
 
 edit:
-	open src/index.js speechAssets/IntentSchema.json speechAssets/SampleUtterances.txt
+	open src/index.js src/options.js speechAssets/IntentSchema.json speechAssets/SampleUtterances.txt
 
 clean:
 	@echo "** Running Cleanup **"
