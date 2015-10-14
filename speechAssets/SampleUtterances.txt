@@ -1,35 +1,31 @@
-QuestionIntent {NumToAsk}
-QuestionIntent ask {NumToAsk} question
-QuestionIntent ask {NumToAsk} questions
-QuestionIntent ask {NumToAsk} random question
-QuestionIntent ask {NumToAsk} random questions
-QuestionIntent to ask {NumToAsk} question
-QuestionIntent to ask {NumToAsk} questions
-QuestionIntent to ask {NumToAsk} random question
-QuestionIntent to ask {NumToAsk} random questions
-QuestionIntent for {NumToAsk} question
-QuestionIntent for {NumToAsk} questions
-QuestionIntent for {NumToAsk} random question
-QuestionIntent for {NumToAsk} random questions
+GenerateQuestionsIntent {NumToAsk}
+GenerateQuestionsIntent {NumToAsk} question
+GenerateQuestionsIntent {NumToAsk} questions
+GenerateQuestionsIntent {NumToAsk} random question
+GenerateQuestionsIntent {NumToAsk} random questions
+GenerateQuestionsIntent for {NumToAsk} question
+GenerateQuestionsIntent for {NumToAsk} questions
+GenerateQuestionsIntent for {NumToAsk} random question
+GenerateQuestionsIntent for {NumToAsk} random questions
+GenerateQuestionsIntent ask me {NumToAsk} question
+GenerateQuestionsIntent ask me {NumToAsk} questions
+GenerateQuestionsIntent ask me {NumToAsk} random question
+GenerateQuestionsIntent ask me {NumToAsk} random questions
 
-NextQuestionIntent yes
-NextQuestionIntent yep
-NextQuestionIntent yeah
-NextQuestionIntent sure
-NextQuestionIntent yes please
-NextQuestionIntent affirmative
+AskQuestionsIntent ask {QuestionToAsk}
+AskQuestionsIntent ask question {QuestionToAsk}
+AskQuestionsIntent repeat {QuestionToAsk}
+AskQuestionsIntent repeat question {QuestionToAsk}
+AskQuestionsIntent say {QuestionToAsk} again
+AskQuestionsIntent say question {QuestionToAsk} again
 
-MoreQuestionIntent ask me more questions
-MoreQuestionIntent ask me more
-MoreQuestionIntent more
-MoreQuestionIntent more questions
-MoreQuestionIntent for more
-MoreQuestionIntent for more questions
+FeedbackIntent how to submit feedback
+FeedbackIntent to submit feedback
+FeedbackIntent submit feedback
 
-PauseIntent no
-PauseIntent nope
-PauseIntent pause
-PauseIntent stop for a sec
+BugIntent how to report a bug
+BugIntent to report a bug
+BugIntent report a bug
 
 HelpIntent help
 HelpIntent help me

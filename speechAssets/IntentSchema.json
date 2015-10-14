@@ -1,24 +1,29 @@
 {
   "intents": [
     {
-     "intent": "QuestionIntent",
-     "slots": [
-      {
-        "name": "NumToAsk",
-        "type": "AMAZON.NUMBER"
-      }
-     ]
+      "intent": "GenerateQuestionsIntent",
+      "slots": [
+        {
+          "name": "NumToAsk",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
     },
     {
-      "intent": "NextQuestionIntent",
+      "intent": "AskQuestionsIntent",
+      "slots": [
+        {
+          "name": "QuestionToAsk",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+    {
+      "intent": "FeedbackIntent",
       "slots": []
     },
     {
-      "intent": "MoreQuestionIntent",
-      "slots": []
-    },
-    {
-      "intent": "PauseIntent",
+      "intent": "BugIntent",
       "slots": []
     },
     {
