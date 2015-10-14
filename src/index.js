@@ -141,27 +141,20 @@ function handleAskQuestionsIntent (intent, session, response){
     intent.slots.QuestionToAsk.value = session.attributes.QuestionsAsked;
   }else{
     //repeat a specific question.
+    intent.slots.QuestionToAsk.value = intent.slots.QuestionToAsk.value-1;
   }
 
   //check that the question number is not out of bounds
-  if((intent.slots.QuestionToAsk.value+1) <= (session.attributes.QuestionsWanted)){
+  if(!session.attributes.QuestionsStarted){
+    speechOutput = "Hmm, it looks like you haven't started the session yet. I'll start it now - how many questions should I prepare for you? ";
+    cardOutput = "Dummy: New session started."
+  }else if((intent.slots.QuestionToAsk.value+1) <= (session.attributes.QuestionsWanted)){
     //we're fine, within bounds
+    speechOutput = buildRespFromQuestion(session,session.attributes.QuestionBank[intent.slots.QuestionToAsk.value]);
   }else{
     speechOutput = "I'm sorry, I can't access that question. Say ask me question, followed by a number for a specific question, or you can say generate more questions. ";
     cardOutput = "Error: can't access question "+intent.slots.QuestionToAsk.value+" of "+session.attributes.QuestionsWanted;
-    response.askWithCard(
-      {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-      {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
-        "D.U.M.M.Y.", cardOutput);
   }
-
-
-  speechOutput += "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted+":";
-  var cardOutput = "";
-  var repromptSpeech = "Shall I ask the next question? ";
-  //since we asked the question already, increase the counter.
-  session.attributes.QuestionsAsked += 1;
-
   response.askWithCard(
     {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
     {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
@@ -187,7 +180,20 @@ function handleBugIntent (intent, session, response){
 
 function buildRespFromQuestion(session, question){
   var speechOutput = "";
-  speechOutput = "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted+", from the category "+question.category.title;
+  //question x of y
+  speechOutput = "Question "+(session.attributes.QuestionsAsked+1)+" of "+session.attributes.QuestionsWanted;
+  //from the category __
+  speechOutput += ", from the category "+question.category.title;
+  //short pause
+  speechOutput += "<break time=\"1s\" />";
+  //question body
+  speechOutput += question.question;
+  //delay
+  speechOutput += "<break time=\""+options.delayBeforeAnswer+"s\" />";
+  //answer
+  speechOutput += question.answer+"<break time=\"1s\" />";
+  //ready for next?
+  speechOutput += "Ready for the next question? ";
 
   return speechOutput;
 }
