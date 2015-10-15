@@ -81,6 +81,7 @@ function handleGreetIntent(session, response){
 
 function handleQuitIntent(intent, session, response){
   var speechOutput = "Thank you for using Dummy, goodbye." ;
+  var cardOutput = "Please visit http://alexaio.com/dummy if you have feedback or comments. ";
   response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
      "D.U.M.M.Y.", cardOutput);
 }
@@ -168,7 +169,7 @@ function handleAskQuestionsIntent (intent, session, response){
 
 //Alexa, ask Currency how to submit feedback
 function handleFeedbackIntent (intent, session, response){
-  var speechOutput = "You can create an issue at github.com forward slash <say-as interpret-as\"characters\">bxio</say-as> forward slash Alexa Currency. " ;
+  var speechOutput = "Feedback can be directed to "+options.homepage ;
   var cardOutput = "To submit feedback, please create an issue at http://github.com/bxio/AlexaCurrency";
   response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
       "D.U.M.M.Y.", cardOutput);
@@ -176,7 +177,7 @@ function handleFeedbackIntent (intent, session, response){
 
 //Alexa, ask Currency how to report a bug
 function handleBugIntent (intent, session, response){
-  var speechOutput = "Am I misbehaving? Please send an email to bill at billxiong dot com. " ;
+  var speechOutput = "Am I misbehaving? Please visit "+options.homepage+ " to contact my creator." ;
   var cardOutput = "Please email bill@billxiong.com";
   response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
       "D.U.M.M.Y.", cardOutput);
