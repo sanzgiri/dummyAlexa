@@ -31,7 +31,9 @@ MoreQuestionsIntent make up more questions
 MoreQuestionsIntent give me more questions
 MoreQuestionsIntent ask me more questions
 
-
+QuitIntent no
+QuitIntent quit
+QuitIntent goodbye
 
 FeedbackIntent how to submit feedback
 FeedbackIntent to submit feedback

@@ -56,6 +56,9 @@ DummySkill.prototype.intentHandlers = {
     MoreQuestionsIntent: function (intent, session, response) {
       handleMoreQuestionsIntent(intent, session, response);
     },
+    QuitIntent: function (intent, session, response) {
+      handleQuitIntent(intent, session, response);
+    },
     FeedbackIntent: function (intent, session, response) {
       handleFeedbackIntent(intent, session, response);
     },
@@ -74,6 +77,12 @@ DummySkill.prototype.intentHandlers = {
 function handleGreetIntent(session, response){
   var speechOutput = "Welcome to Dummy" ;
   response.tell({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML});
+}
+
+function handleQuitIntent(intent, session, response){
+  var speechOutput = "Thank you for using Dummy, goodbye." ;
+  response.tellWithCard({speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
+     "D.U.M.M.Y.", cardOutput);
 }
 
 function handleMoreQuestionsIntent(intent, session, response){
@@ -99,7 +108,7 @@ function handleGenerateQuestionsIntent (intent, session, response){
   //query the API
   request({
       url: options.remoteAPI, //URL to hit
-      qs: {amount: session.attributes.QuestionsWanted}, //Query string data
+      qs: {count: session.attributes.QuestionsWanted}, //Query string data
       method: 'GET', //Specify the method
     }, function(error, serverResponse, body){
       if(error) {
@@ -110,6 +119,7 @@ function handleGenerateQuestionsIntent (intent, session, response){
         rsp = JSON.parse(body);
         //store the response in the question bank
         session.attributes.QuestionBank = rsp;
+        session.attributes.QuestionsStarted = true;
         speechOutput = buildRespFromQuestion(session, rsp[session.attributes.QuestionsAsked]);
         //since we asked the question already, increase the counter.
         session.attributes.QuestionsAsked += 1;
@@ -120,14 +130,6 @@ function handleGenerateQuestionsIntent (intent, session, response){
           "D.U.M.M.Y.", cardOutput);
   });
 
-
-
-
-
-  // response.askWithCard(
-  //   {speech: "<speak>" + speechOutput + "</speak>", type: AlexaSkill.speechOutput.SSML},
-  //   {speech: "<speak>" + repromptSpeech + "</speak>", type: AlexaSkill.speechOutput.SSML},
-  //     "D.U.M.M.Y.", cardOutput);
 }
 
 function handleAskQuestionsIntent (intent, session, response){
@@ -150,7 +152,9 @@ function handleAskQuestionsIntent (intent, session, response){
     cardOutput = "Dummy: New session started."
   }else if((intent.slots.QuestionToAsk.value+1) <= (session.attributes.QuestionsWanted)){
     //we're fine, within bounds
+    // speechOutput = intent.slots.QuestionToAsk.value+"Question is:"+JSON.stringify(session.attributes.QuestionBank);
     speechOutput = buildRespFromQuestion(session,session.attributes.QuestionBank[intent.slots.QuestionToAsk.value]);
+
   }else{
     speechOutput = "I'm sorry, I can't access that question. Say ask me question, followed by a number for a specific question, or you can say generate more questions. ";
     cardOutput = "Error: can't access question "+intent.slots.QuestionToAsk.value+" of "+session.attributes.QuestionsWanted;
@@ -191,7 +195,7 @@ function buildRespFromQuestion(session, question){
   //delay
   speechOutput += "<break time=\""+options.delayBeforeAnswer+"s\" />";
   //answer
-  speechOutput += question.answer+"<break time=\"1s\" />";
+  speechOutput += "What is "+question.answer+"<break time=\"1s\" />";
   //ready for next?
   speechOutput += "Ready for the next question? ";
 
