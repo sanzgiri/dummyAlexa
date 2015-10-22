@@ -1,223 +1,121 @@
-LIST_OF_CURRENCY: {
+LIST_OF_CARD_ATTRIBUTES = {
 
-Argentina
-Argentine
-Argentinian
-Argentina Peso
-Argentina Pesos
-Argentine Peso
-Argentine Pesos
-Argentinian Peso
-Argentinian Pesos
-A.R.S.
+}
 
-Australia
-Australian
-Australian Dollar
-Australian Dollars
-Aussie Dollar
-Aussie Dollars
-A.U.D.
+LIST_OF_CARD_NAMES = {
 
-Bitcoin
-Bitcoins
-B.T.C.
+}
 
-Brazil
-Brazilian
-Brazil Real
-Brazil Reals
-Brazilian Real
-Brazilian Reals
-B.R.L.
-
-Canada
-Canadian
-Canadian Dollar
-Canadian Dollars
-C.A.D.
-
-Chile
-Chilean
-Chile Peso
-Chile Pesos
-Chilean Peso
-Chilean Pesos
-C.L.P.
-
-China
-Chinese
-Chinese Renminbi
-Chinese Yuan
-Yuan
-C.N.Y.
-
-Czech Republic
-Czech
-Czech Republic Koruna
-Czech Koruna
-C.Z.K.
-
-Denmark
-Danish
-Denmark Krone
-Danish Krone
-D.K.K.
-
-Euro
-Euros
-E.U.R.
-
-Fiji
-Fijian
-Fiji Dollar
-Fiji Dollars
-Fijian Dollar
-Fijian Dollars
-F.J.D.
-
-Honduras
-Honduran
-Catracho
-Honduras Lempira
-Honduran Lempira
-Catracho Lempira
-H.N.L.
-
-Hong Kong Dollar
-Hong Kong Dollars
-HK Dollar
-HK Dollars
-H.K.D.
-
-Hungary
-Hungarian
-Hungary Forint
-Hungarian Forint
-H.U.F.
-
-Iceland
-Iceland Krona
-I.S.K.
-
-India Rupee
-Indian Rupee
-I.N.R.
-
-Indonesia Rupiah
-Indonesian Rupiah
-I.D.R.
-
-Israel Shekel
-Israelian Shekel
-I.L.S.
-
-Japan
-Japanese
-Japanese Yen
-J.P.Y.
-
-Korea
-Korean Won
-South Korean Won
-K.R.W.
-
-Malaysia
-Malaysian Ringit
-M.Y.R.
-
-Mexico
-Mexico Peso
-Mexico Pesos
-Mexican Peso
-Mexican Pesos
-M.X.N.
-
-New Zealand Dollar
-New Zealand Dollars
-N.Z.D.
-
-Norway
-Norwegian
-Norway Krone
-Norwegian Krone
-N.O.K.
-
-Pakistan
-Pakistan Rupee
-Pakistan Rupees
-P.K.R.
-
-Philippines
-Filipino Pesos
-Filipino Peso
-P.H.P.
-
-Poland Zloty
-Polish Zloty
-P.L.N.
-
-Russia
-Russian Ruble
-R.U.B.
-
-Singapore Dollar
-Singapore Dollars
-Singaporean Dollar
-Singaporean Dollars
-S.G.D.
-
-South Africa
-South African Rand
-Z.A.R.
-
-Sweden
-Swedish Krona
-S.E.K.
-
-Switzerland
-Swiss Franc
-C.H.F
-
-Taiwan Dollar
-Taiwan Dollars
-Taiwanese Dollar
-Taiwanese Dollars
-T.W.D.
-
-Thailand
-Thailand Baht
-Thai Baht
-T.H.B.
-
-Turkey
-Turkey Lira
-Turkish Lira
-Turk Lira
-T.R.Y.
-
-United Kingdom Pound
-English
-English Pound
-English Pounds
-British
-British Pound
-British Pounds
-G.B.P.
-
-United States Dollar
-United States Dollars
-American
-American Dollar
-American Dollars
-U.S. Dollar
-U.S. Dollars
-U.S.D.
-
-Vietnam
-Vietnam Dong
-Vietnamese Dong
-V.N.D.
-
+LIST_OF_KEYWORDS = {
+Deathtouch
+Defender
+Double Strike
+Enchant
+Equip
+First Strike
+Flash
+Flying
+Haste
+Hexproof
+Indestructible
+Intimidate
+Landwalk
+Lifelink
+Protection
+Reach
+Shroud
+Trample
+Vigilance
+Banding
+Rampage
+Cumulative Upkeep
+Flanking
+Phasing
+Buyback
+Shadow
+Cycling
+Echo
+Horsemanship
+Fading
+Kicker
+Flashback
+Madness
+Fear
+Morph
+Amplify
+Provoke
+Storm
+Affinity
+Entwine
+Modular
+Sunburst
+Bushido
+Soulshift
+Splice
+Offering
+Ninjutsu
+Epic
+Convoke
+Dredge
+Transmute
+Bloodthirst
+Haunt
+Replicate
+Forecast
+Graft
+Recover
+Ripple
+Split Second
+Suspend
+Vanishing
+Absorb
+Aura Swap
+Delve
+Fortify
+Frenzy
+Gravestorm
+Poisonous
+Transfigure
+Champion
+Changeling
+Evoke
+Hideaway
+Prowl
+Reinforce
+Conspire
+Persist
+Wither
+Retrace
+Devour
+Exalted
+Unearth
+Cascade
+Annihilator
+Level Up
+Rebound
+Totem Armor
+Infect
+Battle Cry
+Living Weapon
+Undying
+Miracle
+Soulbond
+Overload
+Scavenge
+Unleash
+Cipher
+Evolve
+Extort
+Fuse
+Bestow
+Tribute
+Dethrone
+Hidden Agenda
+Outlast
+Prowess
+Dash
+Exploit
+Menace
+Renown
 
 }

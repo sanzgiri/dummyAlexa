@@ -40,5 +40,5 @@ My bitcoin address is [1BXiogdLRwoKsLjTmoaTYZB5Zn8ZoWCwMP](bitcoin:1BXiogdLRwoKs
 [Create an issue!](https://github.com/bxio/dummyAlexa/issues/new)
 
 
-[echo link]: http://www.amazon.com/dp/B00X4WHP5E/?tag=bxio-20
+[echo link]: http://www.amazon.com/dp/B00X4WHP5E/?tag=alexaio-20
 [lambda link]: http://aws.amazon.com/lambda
